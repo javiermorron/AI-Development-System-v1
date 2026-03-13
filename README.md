@@ -36,7 +36,6 @@ cd AI-Development-System-v1
 
 Explore the documentation in the `docs/` folder to understand the system architecture, development philosophy, and implementation details.
 
-```markdown
 # 📚 Documentation
 
 - [Vision](docs/vision.md)
