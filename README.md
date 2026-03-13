@@ -23,6 +23,27 @@
 
 **AI Development System v1** is a framework designed to build software using **AI-first development principles**.
 
+---
+
+# ⚡ Quick Start
+
+Clone the repository
+
+```bash
+git clone https://github.com/javiermorron/AI-Development-System-v1.git
+cd AI-Development-System-v1
+```
+
+Explore the documentation in the `docs/` folder to understand the system architecture, development philosophy, and implementation details.
+
+```markdown
+# 📚 Documentation
+
+- [Vision](docs/vision.md)
+- [Architecture](docs/architecture.md)
+- [Roadmap](docs/roadmap.md)
+
+
 Instead of writing code manually, the system orchestrates:
 
 - 🤖 AI agents  
