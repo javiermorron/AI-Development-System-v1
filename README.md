@@ -54,7 +54,6 @@ to a more robust model: idea → specifications → AI agents → validation →
 
 **AI Development System v1** is a framework designed to build software using **AI-first development principles**.
 
-
 # ⚡ Quick Start
 
 Clone the repository
