@@ -48,7 +48,7 @@ AI agents then implement the system while automated pipelines ensure:
 
 The goal is to move software development from: idea → code 
 to a more robust model: idea → specifications → AI agents → validation → production.
-
+---
 
 # 🚀 Overview
 
