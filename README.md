@@ -401,6 +401,24 @@ Key security principles implemented:
 - AI security review
 - Human-in-the-loop for critical actions
 - Full audit logging
+## AI Security Risks Addressed
+
+The architecture is designed to mitigate common risks in AI systems:
+
+- Prompt injection
+- Tool misuse
+- Privilege escalation
+- Data leakage
+- Unsafe autonomous actions
+- Uncontrolled agent access to APIs
+
+Security controls include:
+
+- threat modeling
+- security policies
+- double AI review
+- policy validation
+- audit logging
 
 Security documentation:
 
