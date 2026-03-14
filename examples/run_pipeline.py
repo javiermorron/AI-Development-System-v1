@@ -55,10 +55,14 @@ def main(feature: str, show_code: bool, config: str) -> None:
     engine, context = build_example_pipeline(feature=feature, config=cfg)
 
     # -- Header --------------------------------------------------------------
+    from src.utils import slugify
+    output_dir = f"generated/{slugify(feature)}"
+
     console.print()
     console.print(Panel(
         f"[bold cyan]AI Development System v2[/bold cyan] - Example Pipeline\n\n"
-        f"[bold]Feature:[/bold] {feature}",
+        f"[bold]Feature:[/bold]    {feature}\n"
+        f"[bold]Output dir:[/bold] {output_dir}",
         expand=False,
     ))
     console.print()
@@ -97,15 +101,20 @@ def main(feature: str, show_code: bool, config: str) -> None:
     if approved:
         console.print(Panel(
             f"[green bold]OK PIPELINE PASSED[/green bold]\n"
-            f"Score: {score}/10   All stages completed successfully.\n"
-            f"Next step: implement the [cyan]NotImplementedError[/cyan] stubs "
-            f"in services.py and routes.py.",
+            f"Score: {score}/10   All stages completed successfully.\n\n"
+            f"[bold]Output:[/bold] [cyan]{output_dir}/[/cyan]\n\n"
+            f"[bold]To run:[/bold]\n"
+            f"  cd {output_dir}\n"
+            f"  pip install -r requirements.txt\n"
+            f"  uvicorn main:app --reload\n\n"
+            f"Then open http://localhost:8000/docs",
             border_style="green",
         ))
     else:
         console.print(Panel(
             f"[yellow bold]! PIPELINE COMPLETED WITH WARNINGS[/yellow bold]\n"
-            f"Score: {score}/10   Review the findings above before proceeding.",
+            f"Score: {score}/10   Review the findings above before proceeding.\n\n"
+            f"[bold]Output:[/bold] [cyan]{output_dir}/[/cyan]",
             border_style="yellow",
         ))
 
@@ -166,12 +175,21 @@ def _print_backend(output: dict, show_code: bool) -> None:
     loc       = output.get("lines_of_code", 0)
     n_routes  = output.get("route_count", 0)
 
-    file_list = "  ".join(f"[cyan]{f}[/cyan]" for f in files)
+    # Group files for display
+    top_level = sorted(f for f in files if "/" not in f)
+    routers   = sorted(f for f in files if f.startswith("routers/"))
+
+    tree_lines = [f"  [cyan]{f}[/cyan]" for f in top_level]
+    if routers:
+        tree_lines.append("  [cyan]routers/[/cyan]")
+        for r in routers:
+            tree_lines.append(f"    [cyan]{r.split('/')[-1]}[/cyan]")
+
     console.print(Panel(
-        f"[bold]Entities[/bold]  : {', '.join(entities)}\n"
-        f"[bold]Files[/bold]     : {file_list}\n"
-        f"[bold]Routes[/bold]    : {n_routes} handler stubs generated\n"
-        f"[bold]Lines[/bold]     : ~{loc} lines of Python",
+        f"[bold]Entities[/bold] : {', '.join(entities)}\n"
+        f"[bold]Routes[/bold]   : {n_routes} FastAPI handler stubs\n"
+        f"[bold]Lines[/bold]    : ~{loc} lines of Python\n\n"
+        "[bold]Files generated:[/bold]\n" + "\n".join(tree_lines),
         title="[green]>> BACKEND[/green]",
         border_style="green",
     ))

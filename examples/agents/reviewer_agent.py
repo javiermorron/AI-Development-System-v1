@@ -68,6 +68,8 @@ class ReviewerAgent(BaseAgent):
         total_not_implemented = total_todo = 0
 
         for filename, source in files.items():
+            if not filename.endswith(".py"):
+                continue   # skip requirements.txt, README.md, etc.
             findings, metrics = self._analyze_file(filename, source)
             all_findings.extend(findings)
             total_classes         += metrics["classes"]

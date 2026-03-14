@@ -11,4 +11,4 @@ venv/
 Thumbs.db
 
 # VSCode
-.vscode/
+.vscode/generated/

@@ -1,14 +1,16 @@
 """
-ExamplePipeline — wires ArchitectureAgent → BackendAgent → ReviewerAgent
+ExamplePipeline — wires ArchitectureAgent -> BackendAgent -> ReviewerAgent
 using the existing PipelineEngine + Stage infrastructure.
 
 Data flows through PipelineContext.stage_outputs:
-    stage_outputs["architecture"]  ← ArchitectureAgent output
-    stage_outputs["backend"]       ← BackendAgent output (reads architecture)
-    stage_outputs["reviewer"]      ← ReviewerAgent output (reads backend)
+    stage_outputs["architecture"]  <- ArchitectureAgent output
+    stage_outputs["backend"]       <- BackendAgent output (reads architecture)
+    stage_outputs["reviewer"]      <- ReviewerAgent output (reads backend)
 
 Each stage creates its own agent instance, runs it, and stores the result.
 The audit logger is threaded through PipelineContext.metadata["audit"].
+
+Generated files are written to:  generated/<project-slug>/
 """
 
 from __future__ import annotations
@@ -20,6 +22,7 @@ from src.audit.logger import AuditLogger
 from src.config import load_config
 from src.pipeline.engine import PipelineContext, PipelineEngine
 from src.pipeline.stages import Stage, StageResult, StageStatus
+from src.utils import slugify
 
 # Force registration of all three example agents
 import examples.agents  # noqa: F401
@@ -82,6 +85,10 @@ def _stage_backend(ctx: PipelineContext) -> StageResult:
             status=StageStatus.FAILED,
             error=result.error,
         )
+
+    # Write all generated files to generated/<project-slug>/
+    _write_files(result.output["files"], ctx.workspace)
+
     return StageResult(
         stage_name="backend",
         status=StageStatus.PASSED,
@@ -123,6 +130,19 @@ def _stage_reviewer(ctx: PipelineContext) -> StageResult:
 
 
 # ---------------------------------------------------------------------------
+# File writer
+# ---------------------------------------------------------------------------
+
+def _write_files(files: dict[str, str], workspace: Path) -> None:
+    """Write the files dict to disk under workspace, creating directories as needed."""
+    workspace.mkdir(parents=True, exist_ok=True)
+    for relative_path, content in files.items():
+        dest = workspace / relative_path
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        dest.write_text(content, encoding="utf-8")
+
+
+# ---------------------------------------------------------------------------
 # Pipeline builder
 # ---------------------------------------------------------------------------
 
@@ -135,6 +155,7 @@ def build_example_pipeline(
     Construct a PipelineEngine with the three example stages registered,
     and a PipelineContext ready to run.
 
+    The workspace is set to generated/<slug> derived from the feature text.
     Returns (engine, context) — call engine.run(context) to execute.
     """
     if config is None:
@@ -154,6 +175,9 @@ def build_example_pipeline(
         },
     }
 
+    slug = slugify(feature)
+    workspace = Path("generated") / slug
+
     engine = PipelineEngine(config, audit)
 
     # Register the three example stages (override any same-named built-ins)
@@ -165,7 +189,7 @@ def build_example_pipeline(
     ))
     engine.register_stage(Stage(
         name="backend",
-        description="Generate Python source files from architecture plan",
+        description="Generate FastAPI project from architecture plan",
         handler=_stage_backend,
         depends_on=["architecture"],
     ))
@@ -177,9 +201,9 @@ def build_example_pipeline(
     ))
 
     context = PipelineContext(
-        project_name="example",
+        project_name=slug,
         config=config,
-        workspace=Path("."),
+        workspace=workspace,
         metadata={"audit": audit, "feature": feature},
     )
 
