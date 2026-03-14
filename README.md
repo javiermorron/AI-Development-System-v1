@@ -1,25 +1,18 @@
 
-# 🧠 AI Development System v1
+# AI Development System v2
 
 ### AI-Native Software Development Framework
 
-## 🧠 AI Development Architecture
+## Architecture
 
 The system follows a structured pipeline:
 
-1. Human direction
-2. Specification
-3. Threat modeling
-4. Security rules
-5. Agent implementation
-6. Automated testing
-7. AI code review
-8. AI security review
-9. Policy validation
-10. Pull request workflow
-11. CI/CD
-12. Deployment
-13. Observability and auditing
+```
+Human Direction → Specification → Threat Modeling → Security Rules
+→ Agent Implementation → Automated Testing → AI Code Review
+→ AI Security Review → Policy Validation → Pull Request → CI/CD
+→ Deployment → Observability
+```
 
 > From **idea → specification → AI agents → production**
 
@@ -30,522 +23,186 @@ The system follows a structured pipeline:
 ---
 
 ![AI Native](https://img.shields.io/badge/AI-Native%20Development-blue)
+![Version](https://img.shields.io/badge/version-2.0.0-blue)
+![Python](https://img.shields.io/badge/python-3.10%2B-blue)
 ![Agents](https://img.shields.io/badge/Multi-Agent%20Architecture-purple)
 ![CI/CD](https://img.shields.io/badge/CI/CD-Automated-green)
 ![Security](https://img.shields.io/badge/Security-AI%20Review-red)
 ![License](https://img.shields.io/badge/license-MIT-green)
-![Spec Driven](https://img.shields.io/badge/Spec--Driven%20Engineering-orange)
 
 ---
 
-# ⭐ Why This Project Matters
+## What Changed in v2
 
-AI coding tools are rapidly changing how software is built.
+v1 was documentation-only. v2 adds a working Python framework:
 
-However, most AI-generated code today suffers from major problems:
+| Component | What it does |
+|-----------|-------------|
+| `src/agents/` | BaseAgent, registry, orchestrator, and 5 built-in agent stubs |
+| `src/pipeline/` | PipelineEngine running 8 ordered stages with fail-fast support |
+| `src/security/` | Action classifier (Level 1/2/3), input validator, prompt sanitizer |
+| `src/audit/` | Append-only JSON Lines audit logger — every action is recorded |
+| `src/generator/` | Scaffolds new AI-native projects from templates |
+| `src/cli.py` | `aidev` CLI — init, pipeline, agent, audit, security commands |
 
-- lack of architecture
-- missing tests
-- security risks
-- inconsistent development workflows
-- difficult maintenance
-
-AI Development System v1 addresses these issues by introducing a **structured AI-native development workflow**.
-
-Instead of writing code directly, engineers define:
-
-- system architecture
-- specifications
-- validation rules
-
-AI agents then implement the system while automated pipelines ensure:
-
-- reliability
-- security
-- maintainability
-- production readiness
-
-The goal is to move software development from: idea → code 
-to a more robust model: idea → specifications → AI agents → validation → production.
 ---
 
-# 🚀 Overview
+## Quick Start
 
-**AI Development System v1** is a framework designed to build software using **AI-first development principles**.
-
-# ⚡ Quick Start
-
-Clone the repository
+**Install**
 
 ```bash
 git clone https://github.com/javiermorron/AI-Development-System-v1.git
 cd AI-Development-System-v1
+pip install -e .
 ```
 
-Explore the documentation in the `docs/` folder to understand the system architecture, development philosophy, and implementation details.
+Or without installing:
 
-# 📚 Documentation
+```bash
+pip install -r requirements.txt
+python -m src.cli --help
+```
+
+**Create a new project**
+
+```bash
+aidev init my-project
+```
+
+**Run the pipeline**
+
+```bash
+aidev pipeline run --config config_example.yaml --project my-project
+```
+
+**List agents**
+
+```bash
+aidev agent list
+```
+
+**Check an action's security level**
+
+```bash
+aidev security classify deploy_to_production
+# → Level 3 — Critical: requires human approval
+```
+
+**Show audit log**
+
+```bash
+aidev audit show --tail 50
+```
+
+---
+
+## CLI Reference
+
+```
+aidev init <name>                        Scaffold a new AI-native project
+aidev pipeline run [--config] [--project] Run the full pipeline
+aidev pipeline stages [--config]         List configured stages
+aidev agent list [--config]              Show registered agents
+aidev agent run <agent> <task> [-i JSON] Run one agent task
+aidev audit show [--tail N] [--agent X]  View audit log
+aidev security classify <action>         Classify action level (1/2/3)
+aidev security check-prompt <text>       Detect prompt injection
+```
+
+---
+
+## Configuration
+
+Copy `config_example.yaml` to `config.yaml` and customize. See inline comments.
+
+Key sections:
+- `agents.allowed_tools` — per-agent tool allowlist (least privilege)
+- `agents.critical_actions` — actions requiring human approval
+- `pipeline.stages` — ordered list of stages to run
+- `audit.log_file` — path to JSON Lines audit log
+- `security.prompt_injection_protection` — enable sanitizer
+
+---
+
+## Implementing Agents
+
+Each agent in `src/agents/builtin.py` has a `TODO` marking where to add logic:
+
+```python
+@register
+class BackendAgent(BaseAgent):
+    name = "backend-agent"
+    allowed_tools = ["read_file", "write_file", "run_tests"]
+
+    def execute(self, task: AgentTask) -> Any:
+        # TODO: call LLM API, parse response, return output
+        ...
+```
+
+The base class handles input validation, tool authorization, and audit logging automatically.
+
+---
+
+## Security Model
+
+All agent actions are classified before execution:
+
+| Level | Type | Gate |
+|-------|------|------|
+| 1 — Safe | Read, analyze | None |
+| 2 — Sensitive | Write, create, update | Logged automatically |
+| 3 — Critical | Deploy, delete, financial | Human approval prompt |
+
+See `docs/threat-model.md` and `docs/security-rules.md` for the full model.
+
+---
+
+## Documentation
 
 - [Vision](docs/vision.md)
 - [Architecture](docs/architecture.md)
 - [Roadmap](docs/roadmap.md)
-
-
-Instead of writing code manually, the system orchestrates:
-
-- 🤖 AI agents  
-- 📝 structured specifications  
-- 🧪 automated testing  
-- 🔍 AI code reviews  
-- 🔐 security checks  
-- ⚙️ CI/CD pipelines  
-
-to transform ideas into **production-ready software**.
-
----
-
-# 🌍 Vision
-
-Software development is changing.
-
-The developer is no longer just a coder.
-
-The developer becomes:
-
-```
-Architect
-
-Orchestrator
-
-Validator
-
-System Designer
-
-```
-
-
-AI writes code.
-
-Humans design reliable systems.
-
----
-
-# 🧩 System Architecture
-
-AI Development System v1 transforms development into a structured workflow.
-
-```mermaid
-flowchart TD
-    A["💡 Idea / Problem"] --> B["📝 Specifications"]
-    B --> C["📚 Requirements"]
-    B --> D["🏗️ Architecture"]
-    B --> E["✅ Acceptance Criteria"]
-
-    C --> F["🤖 AI Agents"]
-    D --> F
-    E --> F
-
-    F --> G["🧠 Backend Agent"]
-    F --> H["🧪 Testing Agent"]
-    F --> I["🔐 Security Agent"]
-    F --> J["📦 Release Agent"]
-
-    G --> K["🌿 Feature Branch"]
-    H --> K
-    I --> K
-    J --> K
-
-    K --> L["🔀 Pull Request"]
-    L --> M["⚙️ CI Pipeline"]
-
-    M --> N["🧪 Tests"]
-    M --> O["🔍 Validation"]
-    M --> P["🔐 Security Check"]
-
-    N --> Q{"All checks passed?"}
-    O --> Q
-    P --> Q
-
-    Q -- Yes --> R["🧠 AI Code Review"]
-    Q -- No --> S["Fix & Retry"]
-
-    S --> K
-    R --> T["Merge to main"]
-
-    T --> U["📦 Automated Release"]
-    U --> V["🚀 Production"]
-
-    V --> W["📈 Monitoring"]
-    W --> B
-```
-
----
-
-# 🧠 Development Philosophy
-
-### 1️⃣ AI accelerates development
-But responsibility remains human.
-
-### 2️⃣ Code without tests is technical debt
-Especially when generated by AI.
-
-### 3️⃣ Architecture > Code
-The system design matters more than the implementation.
-
-### 4️⃣ Everything must be validated automatically
-Manual validation cannot keep up with AI speed.
-
-### 5️⃣ Production-ready software is the goal
-Not just generated code.
-
----
-
-# 🧬 Core Components
-
-## 👨‍💻 Human Direction
-
-The developer defines:
-
-- system goals
-- architecture
-- constraints
-- acceptance criteria
-
-AI executes tasks.
-
-Humans **make decisions**.
-
----
-
-## 📜 Specifications (Spec-Driven Development)
-
-All development starts with structured specifications.
-
-```
-docs/
- ├ vision.md
- ├ roadmap.md
- ├ requirements.md
- ├ architecture.md
- ├ tasks.md
- ├ qa-checklist.md
- └ release-rules.md
-```
-
-These documents act as the **source of truth** for AI agents.
-
----
-
-## 🤖 AI Implementation Agents
-
-Multiple agents collaborate to build the system.
-
-Example agents:
-
-```
-backend-agent
-frontend-agent
-testing-agent
-docs-agent
-security-agent
-release-agent
-```
-
-Each agent works in its own branch.
-
-```
-main
-feature/auth
-feature/dashboard
-feature/tests
-feature/docs
-```
-
----
-
-## 🧪 Automated Testing
-
-AI-generated code must include tests.
-
-### 🔴 Critical tests
-- authentication
-- core business logic
-- APIs
-- database operations
-- integrations
-
-### 🟡 Important tests
-- edge cases
-- complex generated code
-
-### 🟢 Delegated tests
-- helpers
-- simple utilities
-
----
-
-## 🔀 Pull Request Workflow
-
-No direct commits to `main`.
-
-Development flow:
-
-```
-feature branch
-↓
-implementation
-↓
-pull request
-↓
-CI checks
-↓
-review
-↓
-merge
-```
-
-Each PR automatically runs:
-
-- lint
-- tests
-- security checks
-- build validation
-
----
-
-## ⚙️ CI/CD Pipeline
-
-CI/CD ensures code quality and safe deployment.
-
-### Continuous Integration
-
-Every commit triggers:
-
-```
-install dependencies
-run linter
-run tests
-build
-```
-
-If anything fails → merge blocked.
-
----
-
-### Continuous Deployment
-
-If all checks pass:
-
-```
-deploy automatically
-```
-
-`main` must always be **production-ready**.
-
----
-
-# 🤖 AI Code Review
-
-Every Pull Request can be reviewed automatically by AI agents.
-
-The agent checks:
-
-- architecture consistency
-- performance issues
-- missing tests
-- logic errors
-- best practices
-
-Possible tools:
-
-- CodeRabbit
-- GitHub Copilot
-- Cursor
-- Claude
-
----
-
-# 🔐 Security Review
-
-Security must be verified automatically.
-
-Checks include:
-
-```
-SQL injection
-XSS vulnerabilities
-exposed secrets
-weak authentication
-unsafe dependencies
-```
-
-Example tool:
-
-```
-claude-code-security-review
-```
-
----
-## 🔐 Security by Design
-
-
-
-This project follows a **Security by Design approach** for AI systems.
-
-Key security principles implemented:
-
-- Threat modeling before implementation
-- Least privilege for agents
-- Tool allowlist
-- Double AI code review
-- AI security review
-- Human-in-the-loop for critical actions
-- Full audit logging
-## AI Security Risks Addressed
-
-The architecture is designed to mitigate common risks in AI systems:
-
-- Prompt injection
-- Tool misuse
-- Privilege escalation
-- Data leakage
-- Unsafe autonomous actions
-- Uncontrolled agent access to APIs
-
-Security controls include:
-
-- threat modeling
-- security policies
-- double AI review
-- policy validation
-- audit logging
-
-Security documentation:
-
 - [Threat Model](docs/threat-model.md)
 - [Security Rules](docs/security-rules.md)
 
-![Architecture](assets/architecture-security.png)
 ---
 
-# 📦 Automated Releases
+## Roadmap
 
-Versioning is automated.
+**v2 (current)** — Working Python framework: CLI, agent stubs, pipeline engine, security helpers, audit logging, project generator.
 
-Workflow:
+**v3 — LLM Integration** — Connect agents to real LLM APIs (Anthropic, OpenAI, Ollama). Implement stage handlers (spec validation, test runner, security scanner). Multi-agent orchestration workflows.
 
-```
-merge into main
-↓
-release PR
-↓
-version bump
-↓
-tag
-↓
-release notes
-↓
-deploy
-```
-
-Release notes can be generated using AI.
+**v4 — Autonomous Engineering** — Self-healing pipelines, AI architecture validation, automatic documentation sync, intelligent deployment strategies.
 
 ---
 
-# 🔄 Full Development Flow
-
-```
-Idea
-↓
-Specification
-↓
-Tasks
-↓
-AI Agents implement
-↓
-Tests generated
-↓
-Pull Request
-↓
-CI/CD
-↓
-AI Review
-↓
-Security Check
-↓
-Merge
-↓
-Release
-↓
-Production
-```
-
----
-
-# 🛠 Example Tech Stack
-
-Possible tools used in this system:
+## Tech Stack
 
 | Layer | Tools |
-|-----|-----|
+|-------|-------|
 | AI Agents | Claude Code, Cursor |
-| Local Models | Ollama |
+| Framework | Python 3.10+, Click, Rich, PyYAML |
+| Local Models | Ollama (planned v3) |
 | Specs | Markdown |
 | Version Control | Git |
 | CI/CD | GitHub Actions |
-| Security | Claude Security Review |
-| Release | Release Please |
+| Security | Classifier + Sanitizer (built-in), Bandit/Semgrep (planned v3) |
+| Release | Release Please (planned v3) |
 
 ---
 
-# 🎯 Goals
+## Author
 
-This system enables developers to build software that is:
-
-```
-faster
-safer
-scalable
-maintainable
-AI-native
-```
-
----
-
-# 🧭 Future Versions
-
-Upcoming improvements:
-
-- autonomous agent orchestration
-- AI architecture validation
-- automatic documentation generation
-- self-healing CI/CD pipelines
-- intelligent deployment strategies
-
----
-
-# 👨‍🚀 Author
-
-**Javier Morrón**
-
-AI Engineer  
-Automation & AI Systems Architect
+**Javier Morrón** — AI Engineer, Automation & AI Systems Architect
 
 > IA, automatización y propósito: ese es mi lenguaje.
 
----
-
-# 🔗 Connect
-
-LinkedIn  
-https://www.linkedin.com/in/javiermorron
+[LinkedIn](https://www.linkedin.com/in/javiermorron)
 
 ---
 
-# 📜 License
+## License
 
-This project is licensed under the **MIT License**.
-
-See the full license here:
-
-[LICENSE](LICENSE)
+MIT — see [LICENSE](LICENSE)

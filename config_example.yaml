@@ -1,0 +1,56 @@
+# AI Development System v2 — Configuration Example
+# Copy to config.yaml and adjust as needed.
+# DO NOT commit config.yaml (it may contain secrets). This file is safe to commit.
+
+system:
+  name: "My AI Project"
+  version: "1.0.0"
+  environment: "development"  # development | staging | production
+
+agents:
+  # Per-agent tool allowlist — agents can only use listed tools
+  allowed_tools:
+    backend-agent:  ["read_file", "write_file", "run_tests", "run_command"]
+    testing-agent:  ["read_file", "write_file", "run_tests"]
+    security-agent: ["read_file", "scan_code", "check_dependencies"]
+    docs-agent:     ["read_file", "write_file"]
+    release-agent:  ["read_file", "tag_release", "generate_notes"]
+
+  # Actions that require human approval before execution (Level 3 / Critical)
+  critical_actions:
+    - deploy
+    - delete_data
+    - change_permissions
+    - financial_operation
+    - migrate_database
+
+pipeline:
+  # Ordered list of stages to execute
+  stages:
+    - specification
+    - threat_modeling
+    - security_rules
+    - implementation
+    - testing
+    - code_review
+    - security_review
+    - policy_validation
+  fail_fast: true   # Stop pipeline on first failed required stage
+
+audit:
+  log_file: "logs/audit.jsonl"   # Path to append-only JSON Lines audit log
+  log_level: "INFO"
+  include_inputs: true            # Log agent inputs (disable if inputs are sensitive)
+  include_outputs: true           # Log agent outputs
+
+security:
+  prompt_injection_protection: true
+  max_input_length: 10000
+  environment_separation: true    # Prevent dev agents from accessing production resources
+
+# TODO (v3): Add LLM provider configuration
+# llm:
+#   provider: "anthropic"        # anthropic | openai | ollama
+#   model: "claude-opus-4-6"
+#   api_key_env: "ANTHROPIC_API_KEY"   # Read from environment variable
+#   max_tokens: 4096
