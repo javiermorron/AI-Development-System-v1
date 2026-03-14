@@ -1,0 +1,112 @@
+<svg width="640" height="500" xmlns="http://www.w3.org/2000/svg" font-family="ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace">
+  <defs>
+    <filter id="sh" x="-5%" y="-5%" width="110%" height="110%">
+      <feDropShadow dx="0" dy="1" stdDeviation="2" flood-color="#00000015"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="640" height="500" fill="#0f172a" rx="10"/>
+
+  <!-- Title bar -->
+  <rect x="0" y="0" width="640" height="44" rx="10" fill="#1e293b"/>
+  <rect x="0" y="30" width="640" height="14" fill="#1e293b"/>
+  <!-- Traffic lights -->
+  <circle cx="22" cy="22" r="7" fill="#ef4444"/>
+  <circle cx="44" cy="22" r="7" fill="#f59e0b"/>
+  <circle cx="66" cy="22" r="7" fill="#22c55e"/>
+  <text x="320" y="27" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#94a3b8">Generated FastAPI Project Structure</text>
+
+  <!-- File tree -->
+  <!-- Root -->
+  <text x="30"  y="76"  font-size="13" fill="#22c55e" font-weight="600">generated/user-authentication-jwt/</text>
+
+  <!-- main.py -->
+  <text x="30"  y="102" font-size="12" fill="#64748b">&#9474;</text>
+  <text x="42"  y="102" font-size="12" fill="#64748b">&#9500;&#9472;&#9472; </text>
+  <text x="88"  y="102" font-size="12" fill="#60a5fa">main.py</text>
+  <text x="210" y="102" font-size="10" fill="#475569">  FastAPI app entry point</text>
+
+  <!-- models.py -->
+  <text x="30"  y="124" font-size="12" fill="#64748b">&#9474;</text>
+  <text x="42"  y="124" font-size="12" fill="#64748b">&#9500;&#9472;&#9472; </text>
+  <text x="88"  y="124" font-size="12" fill="#60a5fa">models.py</text>
+  <text x="210" y="124" font-size="10" fill="#475569">  Pydantic BaseModel per entity</text>
+
+  <!-- schemas.py -->
+  <text x="30"  y="146" font-size="12" fill="#64748b">&#9474;</text>
+  <text x="42"  y="146" font-size="12" fill="#64748b">&#9500;&#9472;&#9472; </text>
+  <text x="88"  y="146" font-size="12" fill="#60a5fa">schemas.py</text>
+  <text x="210" y="146" font-size="10" fill="#475569">  Create / Update / Response schemas</text>
+
+  <!-- services.py -->
+  <text x="30"  y="168" font-size="12" fill="#64748b">&#9474;</text>
+  <text x="42"  y="168" font-size="12" fill="#64748b">&#9500;&#9472;&#9472; </text>
+  <text x="88"  y="168" font-size="12" fill="#60a5fa">services.py</text>
+  <text x="210" y="168" font-size="10" fill="#475569">  Business logic layer</text>
+
+  <!-- repositories.py -->
+  <text x="30"  y="190" font-size="12" fill="#64748b">&#9474;</text>
+  <text x="42"  y="190" font-size="12" fill="#64748b">&#9500;&#9472;&#9472; </text>
+  <text x="88"  y="190" font-size="12" fill="#60a5fa">repositories.py</text>
+  <text x="210" y="190" font-size="10" fill="#475569">  In-memory CRUD store</text>
+
+  <!-- routers/ folder -->
+  <text x="30"  y="212" font-size="12" fill="#64748b">&#9474;</text>
+  <text x="42"  y="212" font-size="12" fill="#64748b">&#9500;&#9472;&#9472; </text>
+  <text x="88"  y="212" font-size="12" fill="#f59e0b">routers/</text>
+  <text x="210" y="212" font-size="10" fill="#475569">  One APIRouter per entity</text>
+
+  <!-- routers/__init__.py -->
+  <text x="30"  y="234" font-size="12" fill="#64748b">&#9474;</text>
+  <text x="50"  y="234" font-size="12" fill="#64748b">&#9474;</text>
+  <text x="62"  y="234" font-size="12" fill="#64748b">&#9500;&#9472;&#9472; </text>
+  <text x="106" y="234" font-size="12" fill="#a78bfa">__init__.py</text>
+  <text x="240" y="234" font-size="10" fill="#475569">  Router aggregation</text>
+
+  <!-- routers/user.py -->
+  <text x="30"  y="256" font-size="12" fill="#64748b">&#9474;</text>
+  <text x="50"  y="256" font-size="12" fill="#64748b">&#9474;</text>
+  <text x="62"  y="256" font-size="12" fill="#64748b">&#9500;&#9472;&#9472; </text>
+  <text x="106" y="256" font-size="12" fill="#a78bfa">user.py</text>
+  <text x="240" y="256" font-size="10" fill="#475569">  GET/POST/PUT/DELETE /users</text>
+
+  <!-- routers/token.py -->
+  <text x="30"  y="278" font-size="12" fill="#64748b">&#9474;</text>
+  <text x="50"  y="278" font-size="12" fill="#64748b">&#9474;</text>
+  <text x="62"  y="278" font-size="12" fill="#64748b">&#9500;&#9472;&#9472; </text>
+  <text x="106" y="278" font-size="12" fill="#a78bfa">token.py</text>
+  <text x="240" y="278" font-size="10" fill="#475569">  GET/POST/PUT/DELETE /tokens</text>
+
+  <!-- routers/... -->
+  <text x="30"  y="300" font-size="12" fill="#64748b">&#9474;</text>
+  <text x="50"  y="300" font-size="12" fill="#64748b">&#9474;</text>
+  <text x="62"  y="300" font-size="12" fill="#64748b">&#9492;&#9472;&#9472; </text>
+  <text x="106" y="300" font-size="12" fill="#64748b">...py</text>
+  <text x="240" y="300" font-size="10" fill="#475569">  One file per entity</text>
+
+  <!-- requirements.txt -->
+  <text x="30"  y="322" font-size="12" fill="#64748b">&#9474;</text>
+  <text x="42"  y="322" font-size="12" fill="#64748b">&#9500;&#9472;&#9472; </text>
+  <text x="88"  y="322" font-size="12" fill="#34d399">requirements.txt</text>
+  <text x="265" y="322" font-size="10" fill="#475569">  fastapi · uvicorn · pydantic</text>
+
+  <!-- README.md -->
+  <text x="30"  y="344" font-size="12" fill="#64748b">&#9474;</text>
+  <text x="42"  y="344" font-size="12" fill="#64748b">&#9492;&#9472;&#9472; </text>
+  <text x="88"  y="344" font-size="12" fill="#34d399">README.md</text>
+  <text x="210" y="344" font-size="10" fill="#475569">  Setup + run instructions</text>
+
+  <!-- Divider -->
+  <line x1="20" y1="368" x2="620" y2="368" stroke="#1e293b" stroke-width="1"/>
+
+  <!-- Run command section -->
+  <text x="30" y="392" font-family="ui-sans-serif, system-ui, sans-serif" font-size="10" font-weight="600" fill="#94a3b8">TO RUN:</text>
+  <text x="30" y="412" font-size="12" fill="#64748b">$</text>
+  <text x="44" y="412" font-size="12" fill="#e2e8f0">cd generated/&lt;slug&gt;</text>
+  <text x="30" y="432" font-size="12" fill="#64748b">$</text>
+  <text x="44" y="432" font-size="12" fill="#e2e8f0">pip install -r requirements.txt</text>
+  <text x="30" y="452" font-size="12" fill="#64748b">$</text>
+  <text x="44" y="452" font-size="12" fill="#e2e8f0">uvicorn main:app --reload</text>
+  <text x="30" y="475" font-family="ui-sans-serif, system-ui, sans-serif" font-size="10" fill="#22c55e">Open: http://localhost:8000/docs</text>
+</svg>

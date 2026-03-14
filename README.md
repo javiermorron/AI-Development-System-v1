@@ -1,208 +1,218 @@
+<p align="center">
+  <img src="assets/images/architecture.svg" width="900" alt="AI Development System Architecture"/>
+</p>
 
-# AI Development System v2
-
-### AI-Native Software Development Framework
-
-## Architecture
-
-The system follows a structured pipeline:
-
-```
-Human Direction → Specification → Threat Modeling → Security Rules
-→ Agent Implementation → Automated Testing → AI Code Review
-→ AI Security Review → Policy Validation → Pull Request → CI/CD
-→ Deployment → Observability
-```
-
-> From **idea → specification → AI agents → production**
+<h1 align="center">AI Development System</h1>
 
 <p align="center">
-  <img src="assets/architecture-diagram.png" width="900">
+  <strong>A multi-agent Python framework that turns a plain-text feature description into a running FastAPI backend — automatically.</strong>
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/python-3.10%2B-blue?style=flat-square" alt="Python 3.10+"/>
+  <img src="https://img.shields.io/badge/version-2.0.0-blue?style=flat-square" alt="Version"/>
+  <img src="https://img.shields.io/badge/agents-3%20working-7c3aed?style=flat-square" alt="Agents"/>
+  <img src="https://img.shields.io/badge/security-L1%2FL2%2FL3-orange?style=flat-square" alt="Security"/>
+  <img src="https://img.shields.io/badge/audit-JSON%20Lines-pink?style=flat-square" alt="Audit"/>
+  <img src="https://img.shields.io/badge/license-MIT-green?style=flat-square" alt="MIT License"/>
 </p>
 
 ---
 
-![AI Native](https://img.shields.io/badge/AI-Native%20Development-blue)
-![Version](https://img.shields.io/badge/version-2.0.0-blue)
-![Python](https://img.shields.io/badge/python-3.10%2B-blue)
-![Agents](https://img.shields.io/badge/Multi-Agent%20Architecture-purple)
-![CI/CD](https://img.shields.io/badge/CI/CD-Automated-green)
-![Security](https://img.shields.io/badge/Security-AI%20Review-red)
-![License](https://img.shields.io/badge/license-MIT-green)
+## What it does
 
----
+You type:
 
-## What Changed in v2
+```
+python -m examples.run_pipeline --feature "Order management with payments and invoices"
+```
 
-v1 was documentation-only. v2 adds a working Python framework:
+Three agents run in sequence. In under a second you have a `generated/order-management-with-payments-and-invoices/` folder with:
 
-| Component | What it does |
-|-----------|-------------|
-| `src/agents/` | BaseAgent, registry, orchestrator, and 5 built-in agent stubs |
-| `src/pipeline/` | PipelineEngine running 8 ordered stages with fail-fast support |
-| `src/security/` | Action classifier (Level 1/2/3), input validator, prompt sanitizer |
-| `src/audit/` | Append-only JSON Lines audit logger — every action is recorded |
-| `src/generator/` | Scaffolds new AI-native projects from templates |
-| `src/cli.py` | `aidev` CLI — init, pipeline, agent, audit, security commands |
+- `main.py` — FastAPI application entry point
+- `models.py` — SQLAlchemy-style Pydantic models per entity
+- `schemas.py` — Create / Update / Response schemas
+- `services.py` — Business logic layer
+- `repositories.py` — In-memory CRUD store
+- `routers/order.py`, `routers/payment.py`, `routers/invoice.py` — One APIRouter per entity
+- `requirements.txt` + `README.md`
 
----
-
-## Quick Start
-
-**Install**
+Then run it:
 
 ```bash
-git clone https://github.com/javiermorron/AI-Development-System-v1.git
+cd generated/order-management-with-payments-and-invoices
+pip install -r requirements.txt
+uvicorn main:app --reload
+# -> http://localhost:8000/docs
+```
+
+---
+
+## How the pipeline works
+
+<p align="center">
+  <img src="assets/images/pipeline-flow.svg" width="900" alt="Pipeline Flow"/>
+</p>
+
+Three agents run in a strict sequence managed by the `PipelineEngine`:
+
+| Stage | Agent | Input | Output |
+|-------|-------|-------|--------|
+| 1 | **ArchitectureAgent** | Feature description text | Entities, routes, security concerns |
+| 2 | **BackendAgent** | Architecture plan | FastAPI source files on disk |
+| 3 | **ReviewerAgent** | Generated `.py` files | Score 0–10, findings, approved flag |
+
+All inter-agent data flows through a single `PipelineContext.stage_outputs` dictionary — no side-channels, no globals. Each stage reads from upstream keys set by previous stages.
+
+---
+
+## Agent interaction detail
+
+<p align="center">
+  <img src="assets/images/agent-interaction.svg" width="900" alt="Agent Interaction Diagram"/>
+</p>
+
+---
+
+## Generated project structure
+
+<p align="center">
+  <img src="assets/images/generated-project-structure.svg" width="640" alt="Generated Project Structure"/>
+</p>
+
+---
+
+## Quick start
+
+```bash
+# Clone and install
+git clone <repo-url>
 cd AI-Development-System-v1
 pip install -e .
+
+# Run the default example (JWT auth system)
+python -m examples.run_pipeline
+
+# Custom feature
+python -m examples.run_pipeline --feature "Blog with posts, comments and tags"
+
+# Show all generated source code inline
+python -m examples.run_pipeline --feature "E-commerce product catalog" --show-code
 ```
 
-Or without installing:
+Or via the `aidev` CLI:
 
 ```bash
-pip install -r requirements.txt
-python -m src.cli --help
-```
-
-**Create a new project**
-
-```bash
-aidev init my-project
-```
-
-**Run the pipeline**
-
-```bash
-aidev pipeline run --config config_example.yaml --project my-project
-```
-
-**List agents**
-
-```bash
-aidev agent list
-```
-
-**Check an action's security level**
-
-```bash
-aidev security classify deploy_to_production
-# → Level 3 — Critical: requires human approval
-```
-
-**Show audit log**
-
-```bash
-aidev audit show --tail 50
+aidev example run
+aidev example run --feature "Inventory management with suppliers"
 ```
 
 ---
 
-## CLI Reference
+## Repository layout
 
 ```
-aidev init <name>                        Scaffold a new AI-native project
-aidev pipeline run [--config] [--project] Run the full pipeline
-aidev pipeline stages [--config]         List configured stages
-aidev agent list [--config]              Show registered agents
-aidev agent run <agent> <task> [-i JSON] Run one agent task
-aidev audit show [--tail N] [--agent X]  View audit log
-aidev security classify <action>         Classify action level (1/2/3)
-aidev security check-prompt <text>       Detect prompt injection
+src/
+  agents/       BaseAgent, registry, orchestrator
+  pipeline/     PipelineEngine + PipelineContext + Stage dataclasses
+  security/     ActionClassifier (L1/L2/L3), InputValidator, PromptSanitizer
+  audit/        AuditLogger — append-only JSON Lines
+  generator/    ProjectGenerator — scaffolds new AI-native projects
+  cli.py        aidev CLI entry point
+
+examples/
+  agents/       ArchitectureAgent, BackendAgent, ReviewerAgent (fully working)
+  pipeline.py   build_example_pipeline() factory
+  run_pipeline.py  Click CLI runner with Rich output
+
+generated/      Output folder — one subdirectory per pipeline run
+assets/images/  SVG diagrams for documentation
+docs/           Architecture, pipeline, threat model, security rules
 ```
 
 ---
 
-## Configuration
+## CLI reference
 
-Copy `config_example.yaml` to `config.yaml` and customize. See inline comments.
-
-Key sections:
-- `agents.allowed_tools` — per-agent tool allowlist (least privilege)
-- `agents.critical_actions` — actions requiring human approval
-- `pipeline.stages` — ordered list of stages to run
-- `audit.log_file` — path to JSON Lines audit log
-- `security.prompt_injection_protection` — enable sanitizer
+```bash
+aidev init <name>              # Scaffold a new AI-native project
+aidev pipeline run             # Run the configured pipeline
+aidev pipeline stages          # List pipeline stages
+aidev agent list               # List all registered agents
+aidev agent run <name>         # Run a specific agent
+aidev audit show               # Print the audit log
+aidev security classify <text> # Classify action level (L1/L2/L3)
+aidev security check-prompt    # Check a prompt for injection patterns
+aidev example run              # Run the 3-agent example pipeline
+```
 
 ---
 
-## Implementing Agents
+## Security model
 
-Each agent in `src/agents/builtin.py` has a `TODO` marking where to add logic:
+Every agent action is classified before execution:
+
+| Level | Name | Examples | Gate |
+|-------|------|----------|------|
+| L1 | Safe | read files, analyze code | auto-proceed |
+| L2 | Sensitive | write files, modify data | log and proceed |
+| L3 | Critical | deploys, permission changes, deletions | **human approval required** |
+
+The `ActionClassifier`, `InputValidator`, and `PromptSanitizer` run on every input. All actions are written to an append-only JSON Lines audit log.
+
+---
+
+## Extending the system
+
+**Add a new agent:**
 
 ```python
-@register
-class BackendAgent(BaseAgent):
-    name = "backend-agent"
-    allowed_tools = ["read_file", "write_file", "run_tests"]
+# examples/agents/my_agent.py
+from src.agents.base import BaseAgent, AgentTask, AgentResult
+from src.agents.registry import register
 
-    def execute(self, task: AgentTask) -> Any:
-        # TODO: call LLM API, parse response, return output
-        ...
+@register("my-agent")
+class MyAgent(BaseAgent):
+    name = "my-agent"
+    allowed_tools = ["read_file", "write_file"]
+
+    def execute(self, task: AgentTask) -> AgentResult:
+        # your logic here
+        return AgentResult(success=True, output={"result": "..."})
 ```
 
-The base class handles input validation, tool authorization, and audit logging automatically.
+**Add a new pipeline stage:**
 
----
+```python
+from src.pipeline.engine import PipelineEngine, PipelineContext
+from src.pipeline.stages import StageResult, StageStatus
 
-## Security Model
+def my_stage(context: PipelineContext) -> StageResult:
+    upstream = context.stage_outputs.get("architecture", {})
+    # process upstream data...
+    return StageResult(stage_name="my-stage", status=StageStatus.PASSED, output={...})
 
-All agent actions are classified before execution:
-
-| Level | Type | Gate |
-|-------|------|------|
-| 1 — Safe | Read, analyze | None |
-| 2 — Sensitive | Write, create, update | Logged automatically |
-| 3 — Critical | Deploy, delete, financial | Human approval prompt |
-
-See `docs/threat-model.md` and `docs/security-rules.md` for the full model.
-
----
-
-## Documentation
-
-- [Vision](docs/vision.md)
-- [Architecture](docs/architecture.md)
-- [Roadmap](docs/roadmap.md)
-- [Threat Model](docs/threat-model.md)
-- [Security Rules](docs/security-rules.md)
+engine.register_stage("my-stage", my_stage, depends_on=["architecture"])
+```
 
 ---
 
 ## Roadmap
 
-**v2 (current)** — Working Python framework: CLI, agent stubs, pipeline engine, security helpers, audit logging, project generator.
-
-**v3 — LLM Integration** — Connect agents to real LLM APIs (Anthropic, OpenAI, Ollama). Implement stage handlers (spec validation, test runner, security scanner). Multi-agent orchestration workflows.
-
-**v4 — Autonomous Engineering** — Self-healing pipelines, AI architecture validation, automatic documentation sync, intelligent deployment strategies.
-
----
-
-## Tech Stack
-
-| Layer | Tools |
-|-------|-------|
-| AI Agents | Claude Code, Cursor |
-| Framework | Python 3.10+, Click, Rich, PyYAML |
-| Local Models | Ollama (planned v3) |
-| Specs | Markdown |
-| Version Control | Git |
-| CI/CD | GitHub Actions |
-| Security | Classifier + Sanitizer (built-in), Bandit/Semgrep (planned v3) |
-| Release | Release Please (planned v3) |
-
----
-
-## Author
-
-**Javier Morrón** — AI Engineer, Automation & AI Systems Architect
-
-> IA, automatización y propósito: ese es mi lenguaje.
-
-[LinkedIn](https://www.linkedin.com/in/javiermorron)
+| Version | Focus | Status |
+|---------|-------|--------|
+| v1 | Documentation framework, threat model, security rules | Done |
+| v2 | Working Python framework, 3 agents, FastAPI generation | **Current** |
+| v3 | Real LLM integration (Claude API), streaming responses | Planned |
+| v4 | Database backends, auth middleware, Docker output | Planned |
+| v5 | Multi-repo orchestration, CI/CD generation | Planned |
 
 ---
 
 ## License
 
-MIT — see [LICENSE](LICENSE)
+MIT
+
+---
+
+*Javier Morron — IA, automatizacion y proposito: ese es mi lenguaje.*
