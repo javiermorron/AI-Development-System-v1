@@ -1,6 +1,25 @@
 
 # 🧠 AI Development System v1
+
 ### AI-Native Software Development Framework
+
+## 🧠 AI Development Architecture
+
+The system follows a structured pipeline:
+
+1. Human direction
+2. Specification
+3. Threat modeling
+4. Security rules
+5. Agent implementation
+6. Automated testing
+7. AI code review
+8. AI security review
+9. Policy validation
+10. Pull request workflow
+11. CI/CD
+12. Deployment
+13. Observability and auditing
 
 > From **idea → specification → AI agents → production**
 
@@ -366,6 +385,29 @@ Example tool:
 claude-code-security-review
 ```
 
+---
+## 🔐 Security by Design
+
+
+
+This project follows a **Security by Design approach** for AI systems.
+
+Key security principles implemented:
+
+- Threat modeling before implementation
+- Least privilege for agents
+- Tool allowlist
+- Double AI code review
+- AI security review
+- Human-in-the-loop for critical actions
+- Full audit logging
+
+Security documentation:
+
+- [Threat Model](docs/threat-model.md)
+- [Security Rules](docs/security-rules.md)
+
+![Architecture](assets/architecture-security.png)
 ---
 
 # 📦 Automated Releases
